@@ -1,18 +1,14 @@
-import { setLocalStorage } from "./utils.mjs";
-import ProductData from "./ProductData.mjs";
+import { getLocalStorage, setLocalStorage } from "./utils.js";
 
-const dataSource = new ProductData("tents");
+const CART_KEY = "so-cart";
 
-function addProductToCart(product) {
-  setLocalStorage("so-cart", product);
+export function addProductToCart(product) {
+  // get current cart (must be an array)
+  const cart = getLocalStorage(CART_KEY) ?? [];
+
+  // add the product (or product.Id, depending on your design)
+  cart.push(product);
+
+  // SAVE IT BACK (this is usually the broken line)
+  setLocalStorage(CART_KEY, cart);
 }
-// add to cart button event handler
-async function addToCartHandler(e) {
-  const product = await dataSource.findProductById(e.target.dataset.id);
-  addProductToCart(product);
-}
-
-// add listener to Add to Cart button
-document
-  .getElementById("addToCart")
-  .addEventListener("click", addToCartHandler);
