@@ -1,14 +1,26 @@
-import { getLocalStorage, setLocalStorage } from "./utils.js";
+import { addProductToCart } from "./cart.js";
 
-const CART_KEY = "so-cart";
+const dataSource = "/json/tents.json";
 
-export function addProductToCart(product) {
-  // get current cart (must be an array)
-  const cart = getLocalStorage(CART_KEY) ?? [];
+async function getProducts() {
+  const response = await fetch(dataSource);
+  if (!response.ok) {
+    throw new Error("Bad Response");
+  }
+  return response.json();
+}
 
-  // add the product (or product.Id, depending on your design)
-  cart.push(product);
+async function findProductById(productId) {
+  const products = await getProducts();
+  return products.find((product) => product.Id === productId);
+}
 
-  // SAVE IT BACK (this is usually the broken line)
-  setLocalStorage(CART_KEY, cart);
+const addToCartButton = document.querySelector("#addToCart");
+
+if (addToCartButton) {
+  addToCartButton.addEventListener("click", async () => {
+    const productId = addToCartButton.dataset.id;
+    const product = await findProductById(productId);
+    addProductToCart(product);
+  });
 }
