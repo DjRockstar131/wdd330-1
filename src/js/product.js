@@ -1,26 +1,24 @@
-import { addProductToCart } from "./cart.js";
+import { setClick } from "./utils.mjs";
+import { addProductToCart, findProductById } from "./products.js";
 
-const dataSource = "/json/tents.json";
+async function addToCartHandler() {
+  const button = document.querySelector("#addToCart");
+  if (!button) return;
 
-async function getProducts() {
-  const response = await fetch(dataSource);
-  if (!response.ok) {
-    throw new Error("Bad Response");
-  }
-  return response.json();
-}
+  const id = button.dataset.id;
 
-async function findProductById(productId) {
-  const products = await getProducts();
-  return products.find((product) => product.Id === productId);
-}
+  try {
+    const product = await findProductById(id);
+    if (!product) {
+      console.error("No product found for id:", id);
+      return;
+    }
 
-const addToCartButton = document.querySelector("#addToCart");
-
-if (addToCartButton) {
-  addToCartButton.addEventListener("click", async () => {
-    const productId = addToCartButton.dataset.id;
-    const product = await findProductById(productId);
     addProductToCart(product);
-  });
+    alert("Added to cart!");
+  } catch (err) {
+    console.error("Add to cart failed:", err);
+  }
 }
+
+setClick("#addToCart", addToCartHandler);
