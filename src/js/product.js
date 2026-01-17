@@ -1,24 +1,14 @@
-import { setClick } from "./utils.mjs";
-import { addProductToCart, findProductById } from "./products.js";
+console.log("URL:", window.location.href);
+console.log("product param:", getParam("product"));
 
-async function addToCartHandler() {
-  const button = document.querySelector("#addToCart");
-  if (!button) return;
 
-  const id = button.dataset.id;
 
-  try {
-    const product = await findProductById(id);
-    if (!product) {
-      console.error("No product found for id:", id);
-      return;
-    }
+import { getParam } from "./utils.mjs";
+import ProductData from "./ProductData.mjs";
+import ProductDetails from "./ProductDetails.mjs";
 
-    addProductToCart(product);
-    alert("Added to cart!");
-  } catch (err) {
-    console.error("Add to cart failed:", err);
-  }
-}
+const productId = getParam("product");
+const dataSource = new ProductData("tents");
 
-setClick("#addToCart", addToCartHandler);
+const product = new ProductDetails(productId, dataSource);
+product.init();

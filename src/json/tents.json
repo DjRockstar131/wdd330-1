@@ -1,0 +1,38 @@
+[
+  {
+    "Id": "880RR",
+    "Name": "Ajax Tent - 3-Person, 3-Season",
+    "Brand": "Marmot",
+    "Price": 199.99,
+    "Image": "images/tents/marmot-ajax-tent-3-person-3-season-in-pale-pumpkin-terracotta~p~880rr_01~320.jpg",
+    "Description": "The Marmot Ajax is a lightweight 3-person, 3-season tent designed for backpackers and weekend adventurers.",
+    "Colors": ["Pumpkin", "Terracotta"]
+  },
+  {
+    "Id": "985RF",
+    "Name": "Talus Tent - 4-Person, 3-Season",
+    "Brand": "The North Face",
+    "Price": 199.99,
+    "Image": "images/tents/the-north-face-talus-tent-4-person-3-season-in-golden-oak-saffron-yellow~p~985rf_01~320.jpg",
+    "Description": "A roomy 4-person tent ideal for family camping and group trips.",
+    "Colors": ["Golden Oak", "Saffron Yellow"]
+  },
+  {
+    "Id": "985PR",
+    "Name": "Alpine Guide Tent - 3-Person, 4-Season",
+    "Brand": "The North Face",
+    "Price": 349.99,
+    "Image": "images/tents/the-north-face-alpine-guide-tent-3-person-4-season-in-canary-yellow-high-rise-grey~p~985pr_01~320.jpg",
+    "Description": "A durable 4-season tent built to handle harsh alpine conditions.",
+    "Colors": ["Canary Yellow", "High Rise Grey"]
+  },
+  {
+    "Id": "344YJ",
+    "Name": "Rimrock Tent - 2-Person, 3-Season",
+    "Brand": "Cedar Ridge",
+    "Price": 69.99,
+    "Image": "images/tents/cedar-ridge-rimrock-tent-2-person-3-season-in-rust-clay~p~344yj_01~320.jpg",
+    "Description": "An affordable, lightweight 2-person tent perfect for casual camping.",
+    "Colors": ["Rust", "Clay"]
+  }
+]
