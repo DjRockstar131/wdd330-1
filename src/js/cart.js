@@ -1,4 +1,4 @@
-import { getCartItems } from "./products.js";
+import { getCartItems } from "./product.js";
 
 function renderCartContents() {
   const cartItems = getCartItems();
