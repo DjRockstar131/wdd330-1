@@ -1,4 +1,12 @@
-import { getCartItems } from "./product.js";
+import { getLocalStorage } from "./utils.mjs";
+
+
+function getCartItems() {
+  return getLocalStorage("so-cart") || [];
+}
+
+
+
 
 function renderCartContents() {
   const cartItems = getCartItems();
