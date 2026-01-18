@@ -4,17 +4,10 @@ function convertToJson(res) {
 }
 
 export default class ProductData {
-  constructor(category) {
-    this.category = category;
-    this.path = `../json/${this.category}.json`;
-  }
-
-  getData() {
-    return fetch(this.path).then(convertToJson);
-  }
-
-  async findProductById(id) {
-    const products = await this.getData();
-    return products.find((item) => item.Id === id);
+  async getData(category) {
+    const url = `/json/${category}.json`;
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`Bad Response: ${response.status}`);
+    return await response.json();
   }
 }
