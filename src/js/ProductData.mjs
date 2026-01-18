@@ -10,4 +10,9 @@ export default class ProductData {
     if (!response.ok) throw new Error(`Bad Response: ${response.status}`);
     return await response.json();
   }
+
+  async findProductById(id, category = "tents") {
+    const list = await this.getData(category);
+    return list.find((p) => p.Id === id);
+  }
 }

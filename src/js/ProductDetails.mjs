@@ -1,4 +1,5 @@
 import { getLocalStorage, setLocalStorage } from "./utils.mjs";
+<script type="module" src="/src/js/product_pages.js"></script>
 
 export default class ProductDetails {
   constructor(productId, dataSource) {
@@ -7,6 +8,9 @@ export default class ProductDetails {
     this.dataSource = dataSource;
   }
 
+
+
+  
   async init() {
     // Guard: missing URL param
     if (!this.productId) {
@@ -68,4 +72,7 @@ export default class ProductDetails {
       </div>
     `;
   }
+
+
+
 }
