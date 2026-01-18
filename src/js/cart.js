@@ -1,4 +1,4 @@
-import { getLocalStorage } from "./utils.mjs";
+import { getLocalStorage, setLocalStorage } from "./utils.mjs";
 
 
 function getCartItems() {
@@ -8,7 +8,7 @@ function getCartItems() {
 
 
 
-import { getLocalStorage, setLocalStorage } from "./utils.mjs";
+
 
 function getCartItems() {
   return getLocalStorage("so-cart") || [];
