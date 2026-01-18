@@ -199,9 +199,13 @@ button {
   margin: auto;
 }
 
-.product-detail img {
-  width: 100%;
+.product-detail img,
+.product-card img {
+  filter: none !important;
+  opacity: 1 !important;
+  mix-blend-mode: normal !important;
 }
+
 
 /* Start cart list card styles */
 .cart-card {
