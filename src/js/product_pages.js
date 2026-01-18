@@ -24,24 +24,4 @@ function productTemplate(p) {
   `;
 }
 
-async function loadProduct() {
-  const productId = new URLSearchParams(window.location.search).get("product");
-  if (!productId) {
-    document.querySelector("main").insertAdjacentHTML("afterbegin", "<p>Missing product id.</p>");
-    return;
-  }
-
-  const dataSource = new ProductData();
-  const products = await dataSource.getData("tents");
-
-  const product = products.find(p => p.Id === productId);
-  if (!product) {
-    document.querySelector("main").insertAdjacentHTML("afterbegin", "<p>Product not found.</p>");
-    return;
-  }
-
-  const main = document.querySelector("main");
-  main.insertAdjacentHTML("afterbegin", productTemplate(product));
-}
-
 loadProduct();
