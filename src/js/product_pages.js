@@ -10,18 +10,3 @@ const dataSource = new ProductData();
 const details = new ProductDetails(productId, dataSource);
 details.init();
 
-
-function productTemplate(p) {
-  return `
-    <section class="product-detail">
-      <h1>${p.Name}</h1>
-      <p class="brand">${p.Brand}</p>
-      <img src="/${p.Image}" alt="${p.Name}">
-      <p class="price">$${p.Price}</p>
-      <p>${p.Description}</p>
-      <p>${(p.Colors || []).join(", ")}</p>
-    </section>
-  `;
-}
-
-loadProduct();
