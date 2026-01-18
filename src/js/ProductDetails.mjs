@@ -1,5 +1,5 @@
 import { getLocalStorage, setLocalStorage } from "./utils.mjs";
-<script type="module" src="/src/js/product_pages.js"></script>
+
 
 export default class ProductDetails {
   constructor(productId, dataSource) {
