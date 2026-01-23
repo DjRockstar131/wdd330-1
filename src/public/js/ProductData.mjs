@@ -1,18 +1,13 @@
-function convertToJson(res) {
-  if (res.ok) return res.json();
-  throw new Error(`Bad Response: ${res.status}`);
-}
-
 export default class ProductData {
-  async getData(category) {
-    const url = `/json/${category}.json`;
-    const response = await fetch(url);
-    if (!response.ok) throw new Error(`Bad Response: ${response.status}`);
-    return await response.json();
+  constructor(basePath = "/json/") {
+    this.basePath = basePath;
   }
 
-  async findProductById(id, category = "tents") {
-    const list = await this.getData(category);
-    return list.find((p) => p.Id === id);
+  async getData(category) {
+    const response = await fetch(`${this.basePath}${category}.json`);
+    if (!response.ok) {
+      throw new Error(`Could not load ${this.basePath}${category}.json (${response.status})`);
+    }
+    return await response.json();
   }
 }

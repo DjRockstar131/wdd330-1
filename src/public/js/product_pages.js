@@ -12,3 +12,6 @@ if (!listElement) {
   const productList = new ProductList("tents", dataSource, listElement);
   productList.init();
 }
+
+const list = await dataSource.getData("tents");
+console.log("Products loaded:", list.length, list[0]);
