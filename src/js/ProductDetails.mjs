@@ -1,4 +1,8 @@
 import { getLocalStorage, setLocalStorage } from "./utils.mjs";
+import { loadHeaderFooter } from "./utils.mjs";
+
+loadHeaderFooter();
+// rest of cart code...
 
 
 export default class ProductDetails {

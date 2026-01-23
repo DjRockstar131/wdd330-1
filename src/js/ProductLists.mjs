@@ -1,5 +1,9 @@
 // src/js/ProductList.mjs
 import { renderListWithTemplate } from "./utils.mjs";
+import { loadHeaderFooter } from "./utils.mjs";
+
+loadHeaderFooter();
+// rest of cart code...
 
 function productCardTemplate(product) {
   // Adjust property names here if your JSON uses different keys!
