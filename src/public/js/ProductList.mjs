@@ -2,23 +2,22 @@
 import { renderListWithTemplate } from "./utils.mjs";
 
 function productCardTemplate(product) {
-  const id = product.Id ?? product.id;
-  const name = product.Name ?? product.name;
-  const price = product.Price ?? product.price;
-  const brand = product.Brand?.Name ?? product.Brand ?? product.brand ?? "";
-  const img = product.Images?.PrimaryLarge ?? product.Image ?? product.image ?? "";
+  const img = product.Image.startsWith("/")
+    ? product.Image
+    : `/${product.Image}`;
 
   return `
     <li class="product-card">
-      <a href="/product_pages/product.html?product=${id}">
-        <img src="${img}" alt="${name}" />
-        <h2 class="card__brand">${brand}</h2>
-        <h3 class="card__name">${name}</h3>
-        <p class="product-card__price">$${price}</p>
+      <a href="/product_pages/product.html?product=${product.Id}">
+        <img src="${img}" alt="${product.Name}" />
+        <h2 class="card__brand">${product.Brand || ""}</h2>
+        <h3 class="card__name">${product.Name}</h3>
+        <p class="product-card__price">$${product.Price}</p>
       </a>
     </li>
   `;
 }
+
 
 
 export default class ProductList {

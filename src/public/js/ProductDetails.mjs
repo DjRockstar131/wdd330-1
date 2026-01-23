@@ -1,9 +1,4 @@
 import { getLocalStorage, setLocalStorage } from "./utils.mjs";
-import { loadHeaderFooter } from "./utils.mjs";
-
-loadHeaderFooter();
-// rest of cart code...
-
 
 export default class ProductDetails {
   constructor(productId, dataSource) {
@@ -12,14 +7,12 @@ export default class ProductDetails {
     this.dataSource = dataSource;
   }
 
-
-
-  
   async init() {
+    const target = document.querySelector(".product-detail");
+
     // Guard: missing URL param
     if (!this.productId) {
-      document.querySelector(".product-detail").innerHTML =
-        "<p>Missing product id in the URL. Example: ?product=880RR</p>";
+      target.innerHTML = "<p>Missing product id in the URL. Example: ?product=880RR</p>";
       return;
     }
 
@@ -28,7 +21,7 @@ export default class ProductDetails {
 
     // Guard: product not found
     if (!this.product) {
-      document.querySelector(".product-detail").innerHTML =
+      target.innerHTML =
         "<p>Product not found. Check that the id in the URL matches tents.json.</p>";
       return;
     }
@@ -54,29 +47,25 @@ export default class ProductDetails {
   }
 
   productTemplate(product) {
+    const img = product.Image?.startsWith("/") ? product.Image : `/${product.Image}`;
+    const colors = Array.isArray(product.Colors) ? product.Colors.join("/") : "";
+
     return `
-      <h3>${product.Brand}</h3>
+      <h3>${product.Brand ?? ""}</h3>
 
-      <h2 class="divider">${product.Name}</h2>
+      <h2 class="divider">${product.Name ?? ""}</h2>
 
-      <img
-        class="divider"
-        src="/${product.Image}"
-        alt="${product.Name}"
-      />
+      <img class="divider" src="${img}" alt="${product.Name ?? "Product image"}" />
 
-      <p class="product-card__price">$${product.Price}</p>
+      <p class="product-card__price">$${product.Price ?? ""}</p>
 
-      <p class="product__color">${product.Colors ? product.Colors.join("/") : ""}</p>
+      <p class="product__color">${colors}</p>
 
       <p class="product__description">${product.Description ?? ""}</p>
 
       <div class="product-detail__add">
-        <button id="addToCart" data-id="${product.Id}">Add to Cart</button>
+        <button id="addToCart" data-id="${product.Id ?? ""}">Add to Cart</button>
       </div>
     `;
   }
-
-
-
 }

@@ -10,4 +10,11 @@ export default class ProductData {
     }
     return await response.json();
   }
+  async findProductById(id, category = "tents") {
+  const list = await this.getData(category);
+  return list.find((p) => p.Id === id);
+  }
+
 }
+
+
