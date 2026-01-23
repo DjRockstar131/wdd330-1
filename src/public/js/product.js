@@ -4,8 +4,12 @@ import ProductDetails from "./ProductDetails.mjs";
 
 loadHeaderFooter();
 
-const productId = new URLSearchParams(window.location.search).get("product");
-const dataSource = new ProductData();
+async function init() {
+  const productId = new URLSearchParams(window.location.search).get("product");
 
-const details = new ProductDetails(productId, dataSource);
-details.init();
+  const dataSource = new ProductData();
+  const details = new ProductDetails(productId, dataSource);
+  await details.init();
+}
+
+init();
