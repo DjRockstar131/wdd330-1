@@ -1,18 +1,11 @@
-console.log("URL:", window.location.href);
-console.log("product param:", getParam("product"));
-
-
-
-import { getParam } from "./utils.mjs";
+import { loadHeaderFooter } from "./utils.mjs";
 import ProductData from "./ProductData.mjs";
 import ProductDetails from "./ProductDetails.mjs";
-import { loadHeaderFooter } from "./utils.mjs";
 
 loadHeaderFooter();
-// rest of cart code...
 
-const productId = getParam("product");
-const dataSource = new ProductData("tents");
+const productId = new URLSearchParams(window.location.search).get("product");
+const dataSource = new ProductData();
 
-const product = new ProductDetails(productId, dataSource);
-product.init();
+const details = new ProductDetails(productId, dataSource);
+details.init();
