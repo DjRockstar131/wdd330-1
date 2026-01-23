@@ -3,11 +3,12 @@ import { getLocalStorage, setLocalStorage, renderListWithTemplate } from "./util
 
 function cartItemTemplate(item) {
   const price = item.FinalPrice ?? item.Price ?? 0;
+  const img = item.Image?.startsWith("/") ? item.Image : `/${item.Image}`;
 
   return `
     <li class="cart-card divider">
       <a href="/product_pages/product.html?product=${item.Id}" class="cart-card__image">
-        <img src="/${item.Image}" alt="${item.Name}" />
+        <img src="${img}" alt="${item.Name}" />
       </a>
 
       <a href="/product_pages/product.html?product=${item.Id}">
@@ -22,22 +23,35 @@ function cartItemTemplate(item) {
 }
 
 export default class ShoppingCart {
-  constructor(listElementSelector, totalElementSelector, key = "so-cart") {
-    this.listElement = document.querySelector(listElementSelector);
-    this.totalElement = document.querySelector(totalElementSelector);
+  constructor(listSelector, totalSelector, key = "so-cart") {
+    this.listSelector = listSelector;
+    this.totalSelector = totalSelector;
     this.key = key;
+
+    this.listElement = null;
+    this.totalElement = null;
   }
 
   init() {
+    this.listElement = document.querySelector(this.listSelector);
+    this.totalElement = document.querySelector(this.totalSelector);
+
+    console.log("ShoppingCart.init", {
+      listFound: !!this.listElement,
+      totalFound: !!this.totalElement,
+      key: this.key,
+      path: location.pathname,
+    });
+
     if (!this.listElement || !this.totalElement) return;
+
     this.render();
 
-    // remove button handler (event delegation)
+    // event delegation for remove buttons
     this.listElement.addEventListener("click", (e) => {
       const btn = e.target.closest(".cart-remove");
       if (!btn) return;
-      const id = btn.dataset.id;
-      this.removeItem(id);
+      this.removeItem(btn.dataset.id);
     });
   }
 
@@ -61,6 +75,7 @@ export default class ShoppingCart {
 
   render() {
     const items = this.getItems();
+    console.log("ShoppingCart.render items:", items.length, items[0]);
 
     if (!items.length) {
       this.listElement.innerHTML = "<li>Your cart is empty.</li>";
@@ -71,6 +86,6 @@ export default class ShoppingCart {
     renderListWithTemplate(cartItemTemplate, this.listElement, items, "afterbegin", true);
 
     const total = this.calculateTotal(items);
-    this.totalElement.textContent = `$${total.toFixed(2)}`;
+    this.totalElement.textContent = `$${Number(total).toFixed(2)}`;
   }
 }
