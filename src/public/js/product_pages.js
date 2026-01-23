@@ -4,6 +4,14 @@ import ProductList from "./ProductList.mjs";
 
 loadHeaderFooter();
 
+console.log("✅ product_pages.js is running on", location.pathname);
+document.querySelector("#product-list")?.insertAdjacentHTML(
+  "afterbegin",
+  "<li>TEST CARD</li>"
+);
+
+
+
 async function init() {
   const listElement = document.querySelector("#product-list");
   if (!listElement) {
