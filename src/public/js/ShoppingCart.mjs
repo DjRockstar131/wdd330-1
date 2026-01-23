@@ -1,5 +1,7 @@
 // src/js/ShoppingCart.mjs
 import { getLocalStorage, setLocalStorage, renderListWithTemplate } from "./utils.mjs";
+import { loadHeaderFooter } from "./utils.mjs";
+loadHeaderFooter();
 
 function cartItemTemplate(item) {
   return `
