@@ -24,11 +24,17 @@ export function renderListWithTemplate(
   position = "afterbegin",
   clear = false
 ) {
-  if (!parentElement) return; // ✅ prevent "innerHTML of null" crashes
-
-  if (clear) {
-    parentElement.innerHTML = "";
+  if (!parentElement) {
+    console.warn("renderListWithTemplate: parentElement was null. Check your selector + page HTML.");
+    return;
   }
+
+  if (!Array.isArray(list)) {
+    console.warn("renderListWithTemplate: list was not an array:", list);
+    return;
+  }
+
+  if (clear) parentElement.innerHTML = "";
 
   const htmlStrings = list.map(templateFn);
   parentElement.insertAdjacentHTML(position, htmlStrings.join(""));
