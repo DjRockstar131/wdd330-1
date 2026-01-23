@@ -3,6 +3,8 @@ import { resolve } from "path";
 export default {
   root: resolve(__dirname, "src/public"),
   build: {
+    outDir: resolve(__dirname, "dist"),
+    emptyOutDir: true,
     rollupOptions: {
       input: {
         main: resolve(__dirname, "src/public/index.html"),
