@@ -5,7 +5,10 @@ function productCardTemplate(product) {
   return `
     <li class="product-card">
       <a href="/product_pages/product.html?product=${product.Id}">
-        <img src="${product.Images?.PrimaryLarge || product.Image}" alt="${product.Name}" />
+        <img
+          src="${product.Images?.PrimaryLarge || product.Image}"
+          alt="${product.Name}"
+        />
         <h2 class="card__brand">${product.Brand?.Name || product.Brand || ""}</h2>
         <h3 class="card__name">${product.Name}</h3>
         <p class="product-card__price">$${product.Price}</p>
@@ -27,8 +30,8 @@ export default class ProductList {
   }
 
   renderList(list) {
-    // If your renderListWithTemplate signature is (templateFn, parent, list, callback)
-    // then use this:
-    renderListWithTemplate(productCardTemplate, this.listElement, list, (item) => item);
+    // matches your utils signature:
+    // (templateFn, parentElement, list, position="afterbegin", clear=false)
+    renderListWithTemplate(productCardTemplate, this.listElement, list, "afterbegin", true);
   }
 }

@@ -1,12 +1,14 @@
-// src/public/js/product_pages.js
 import { loadHeaderFooter } from "./utils.mjs";
 import ProductData from "./ProductData.mjs";
-import ProductList from "./ProductLists.mjs"; // (or whatever your list class is named)
+import ProductList from "./ProductList.mjs";
 
 loadHeaderFooter();
 
-const dataSource = new ProductData("tents"); // adjust if your ProductData expects a category
 const listElement = document.querySelector(".product-list");
-
-const productList = new ProductList("tents", dataSource, listElement);
-productList.init();
+if (!listElement) {
+  console.error('Missing element: <ul class="product-list"> on this page.');
+} else {
+  const dataSource = new ProductData();
+  const productList = new ProductList("tents", dataSource, listElement);
+  productList.init();
+}
