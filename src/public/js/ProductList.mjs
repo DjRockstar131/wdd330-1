@@ -1,11 +1,7 @@
-// src/public/js/ProductList.mjs
 import { renderListWithTemplate } from "./utils.mjs";
 
 function productCardTemplate(product) {
-  const img = product.Image.startsWith("/")
-    ? product.Image
-    : `/${product.Image}`;
-
+  const img = product.Image?.startsWith("/") ? product.Image : `/${product.Image}`;
   return `
     <li class="product-card">
       <a href="/product_pages/product.html?product=${product.Id}">
@@ -17,8 +13,6 @@ function productCardTemplate(product) {
     </li>
   `;
 }
-
-
 
 export default class ProductList {
   constructor(category, dataSource, listElement) {
@@ -33,8 +27,7 @@ export default class ProductList {
   }
 
   renderList(list) {
-    // matches your utils signature:
-    // (templateFn, parentElement, list, position="afterbegin", clear=false)
+    if (!this.listElement) return;
     renderListWithTemplate(productCardTemplate, this.listElement, list, "afterbegin", true);
   }
 }
