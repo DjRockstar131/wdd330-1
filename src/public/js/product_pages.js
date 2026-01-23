@@ -4,14 +4,18 @@ import ProductList from "./ProductList.mjs";
 
 loadHeaderFooter();
 
-const listElement = document.querySelector(".product-list");
-if (!listElement) {
-  console.error('Missing element: <ul class="product-list"> on this page.');
-} else {
+async function init() {
+  const listElement = document.querySelector(".product-list");
+  if (!listElement) return;
+
   const dataSource = new ProductData();
+
+  // Optional debug (safe now):
+  // const list = await dataSource.getData("tents");
+  // console.log("Products loaded:", list.length, list[0]);
+
   const productList = new ProductList("tents", dataSource, listElement);
-  productList.init();
+  await productList.init();
 }
 
-const list = await dataSource.getData("tents");
-console.log("Products loaded:", list.length, list[0]);
+init();
