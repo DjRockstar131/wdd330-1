@@ -1,16 +1,12 @@
-// src/js/product_pages.js
-import ProductData from "./ProductData.mjs";
-import ProductDetails from "./ProductDetails.mjs";
+// src/public/js/product_pages.js
 import { loadHeaderFooter } from "./utils.mjs";
+import ProductData from "./ProductData.mjs";
+import ProductList from "./ProductLists.mjs"; // (or whatever your list class is named)
 
 loadHeaderFooter();
-// rest of cart code...
 
-const productId = new URLSearchParams(window.location.search).get("product");
+const dataSource = new ProductData("tents"); // adjust if your ProductData expects a category
+const listElement = document.querySelector(".product-list");
 
-const dataSource = new ProductData();
-
-// Add this method to ProductData OR do the find here (see below)
-const details = new ProductDetails(productId, dataSource);
-details.init();
-
+const productList = new ProductList("tents", dataSource, listElement);
+productList.init();

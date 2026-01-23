@@ -1,15 +1,10 @@
-// src/js/ProductList.mjs
+// src/public/js/ProductList.mjs
 import { renderListWithTemplate } from "./utils.mjs";
-import { loadHeaderFooter } from "./utils.mjs";
-
-loadHeaderFooter();
-// rest of cart code...
 
 function productCardTemplate(product) {
-  // Adjust property names here if your JSON uses different keys!
   return `
     <li class="product-card">
-      <a href="/product_pages/index.html?product=${product.Id}">
+      <a href="/product_pages/product.html?product=${product.Id}">
         <img src="${product.Images?.PrimaryLarge || product.Image}" alt="${product.Name}" />
         <h2 class="card__brand">${product.Brand?.Name || product.Brand || ""}</h2>
         <h3 class="card__name">${product.Name}</h3>
@@ -32,6 +27,8 @@ export default class ProductList {
   }
 
   renderList(list) {
-    renderListWithTemplate(productCardTemplate, this.listElement, list, "afterbegin", true);
+    // If your renderListWithTemplate signature is (templateFn, parent, list, callback)
+    // then use this:
+    renderListWithTemplate(productCardTemplate, this.listElement, list, (item) => item);
   }
 }
