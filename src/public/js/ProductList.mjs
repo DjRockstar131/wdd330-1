@@ -19,7 +19,7 @@ function productCardTemplate(product) {
 
   return `
     <li class="product-card">
-      <a href="/product_pages/index.html?product=${encodeURIComponent(product.Id)}">
+      <a href="/product_pages/product.html?product=${encodeURIComponent(product.Id)}">
         <img src="${img}" alt="${product.Name ?? "Product"}" />
         <h2 class="card__brand">${getBrand(product)}</h2>
         <h3 class="card__name">${product.Name ?? ""}</h3>
