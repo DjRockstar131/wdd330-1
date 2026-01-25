@@ -1,4 +1,5 @@
 // src/public/js/ProductData.mjs
+console.log("VITE_SERVER_URL =", import.meta.env.VITE_SERVER_URL);
 
 const rawBaseURL = import.meta.env.VITE_SERVER_URL || "";
 const baseURL = rawBaseURL.endsWith("/") ? rawBaseURL : `${rawBaseURL}/`;
