@@ -19,7 +19,7 @@ function productCardTemplate(product) {
 
   return `
     <li class="product-card">
-      <a href="/product_pages/index.html?product=${product.Id}">
+      <a href="/product_pages/index.html?product=${encodeURIComponent(product.Id)}">
         <img src="${img}" alt="${product.Name ?? "Product"}" />
         <h2 class="card__brand">${getBrand(product)}</h2>
         <h3 class="card__name">${product.Name ?? ""}</h3>
@@ -30,19 +30,42 @@ function productCardTemplate(product) {
 }
 
 export default class ProductList {
-  constructor(category, dataSource, listElement) {
+  constructor(category, dataSource, listElementOrSelector) {
     this.category = category;
     this.dataSource = dataSource;
-    this.listElement = listElement;
+
+    // allow passing ".product-list" OR an element
+    this.listElement =
+      typeof listElementOrSelector === "string"
+        ? document.querySelector(listElementOrSelector)
+        : listElementOrSelector;
   }
 
   async init() {
+    if (!this.listElement) {
+      console.warn("ProductList: list element not found on", location.pathname);
+      return;
+    }
+
     const list = await this.dataSource.getData(this.category);
+
+    // Debug + safety: API must return an array
+    if (!Array.isArray(list)) {
+      console.warn("ProductList: getData did not return an array", {
+        category: this.category,
+        returnedType: typeof list,
+        returnedValue: list,
+      });
+      this.listElement.innerHTML =
+        "<li>Could not load products (data was not an array).</li>";
+      return;
+    }
+
+    console.log(`ProductList: loaded ${list.length} products for "${this.category}"`);
     this.renderList(list);
   }
 
   renderList(list) {
-    if (!this.listElement) return;
     renderListWithTemplate(productCardTemplate, this.listElement, list, "afterbegin", true);
   }
 }
