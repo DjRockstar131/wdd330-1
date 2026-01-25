@@ -1,12 +1,18 @@
 // src/public/js/utils.mjs
 
+// ---------- DOM helpers ----------
+export function qs(selector, parent = document) {
+  return parent.querySelector(selector);
+}
+
 // ---------- LocalStorage helpers ----------
 export function getLocalStorage(key) {
   const raw = localStorage.getItem(key);
   if (!raw) return null;
   try {
     return JSON.parse(raw);
-  } catch {
+  } catch (err) {
+    console.warn(`getLocalStorage: could not parse JSON for key "${key}"`, err);
     return null;
   }
 }
@@ -17,23 +23,31 @@ export function setLocalStorage(key, data) {
 
 // ---------- URL Param helper ----------
 export function getParam(key) {
-  const url = new URL(window.location.href);
-  return url.searchParams.get(key);
+  return new URL(window.location.href).searchParams.get(key);
 }
 
 // ---------- List templating ----------
+// parent can be an Element OR a selector string like ".product-list"
 export function renderListWithTemplate(
   templateFn,
-  parentElement,
+  parent,
   list,
   position = "afterbegin",
   clear = false
 ) {
-  if (!parentElement) return;
+  const parentElement = typeof parent === "string" ? document.querySelector(parent) : parent;
+
+  if (!parentElement) {
+    console.warn(
+      "renderListWithTemplate: parentElement was null.",
+      { parent, path: window.location.pathname }
+    );
+    return;
+  }
 
   if (clear) parentElement.innerHTML = "";
 
-  const htmlStrings = list.map(templateFn);
+  const htmlStrings = (list || []).map(templateFn);
   parentElement.insertAdjacentHTML(position, htmlStrings.join(""));
 }
 
@@ -44,21 +58,38 @@ export async function loadTemplate(path) {
   return await res.text();
 }
 
-export function renderWithTemplate(template, parentElement) {
-  if (!parentElement) return;
+export function renderWithTemplate(template, parent) {
+  const parentElement = typeof parent === "string" ? document.querySelector(parent) : parent;
+
+  if (!parentElement) {
+    console.warn(
+      "renderWithTemplate: parentElement was null.",
+      { parent, path: window.location.pathname }
+    );
+    return;
+  }
+
   parentElement.innerHTML = template;
 }
 
 export async function loadHeaderFooter() {
+  // If a page doesn't have one of these, don't crash—just skip.
   const headerEl = document.querySelector("#main-header");
   const footerEl = document.querySelector("#main-footer");
-  if (!headerEl || !footerEl) return;
 
-  const [headerTemplate, footerTemplate] = await Promise.all([
-    loadTemplate("/partials/header.html"),
-    loadTemplate("/partials/footer.html"),
-  ]);
+  const tasks = [];
 
-  renderWithTemplate(headerTemplate, headerEl);
-  renderWithTemplate(footerTemplate, footerEl);
+  if (headerEl) {
+    tasks.push(
+      loadTemplate("/partials/header.html").then((tpl) => renderWithTemplate(tpl, headerEl))
+    );
+  }
+
+  if (footerEl) {
+    tasks.push(
+      loadTemplate("/partials/footer.html").then((tpl) => renderWithTemplate(tpl, footerEl))
+    );
+  }
+
+  await Promise.all(tasks);
 }
