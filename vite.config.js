@@ -10,7 +10,7 @@ export default {
         product_listing: resolve(__dirname, "src/public/product_listing/index.html"),
         cart: resolve(__dirname, "src/public/cart/index.html"),
         checkout: resolve(__dirname, "src/public/checkout/index.html"),
-        product_pages: resolve(__dirname, "src/public/product_pages/index.html"),
+        
       },
     },
   },
