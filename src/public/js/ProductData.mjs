@@ -1,33 +1,49 @@
 // src/public/js/ProductData.mjs
-console.log("VITE_SERVER_URL =", import.meta.env.VITE_SERVER_URL);
+const rawBaseURL = import.meta.env.VITE_SERVER_URL;
+const apiToken = import.meta.env.VITE_API_TOKEN; // you will add this
 
-const rawBaseURL = import.meta.env.VITE_SERVER_URL || "";
-const baseURL = rawBaseURL.endsWith("/") ? rawBaseURL : `${rawBaseURL}/`;
+if (!rawBaseURL) {
+  throw new Error("Missing VITE_SERVER_URL");
+}
+if (!apiToken) {
+  throw new Error("Missing VITE_API_TOKEN");
+}
+
+const baseURL = rawBaseURL.endsWith("/")
+  ? rawBaseURL.slice(0, -1)
+  : rawBaseURL;
 
 async function convertToJson(response) {
+  const data = await response.json().catch(() => null);
   if (!response.ok) {
-    const text = await response.text().catch(() => "");
     throw new Error(
-      `Fetch failed: ${response.status} ${response.statusText} ${text ? `| ${text}` : ""}`
+      `Fetch failed: ${response.status} ${response.statusText} | ${JSON.stringify(data)}`
     );
   }
-  return await response.json();
+  return data;
+}
+
+function getHeaders() {
+  return {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${apiToken}`, // most likely what the backend wants
+  };
 }
 
 export default class ProductData {
-  // Get list of products for a category (tents, backpacks, sleeping-bags, hammocks)
   async getData(category) {
-    if (!category) throw new Error("getData(category) requires a category.");
-    const response = await fetch(`${baseURL}products/search/${category}`);
+    const response = await fetch(`${baseURL}/products/search/${category}`, {
+      headers: getHeaders(),
+    });
     const data = await convertToJson(response);
-    return data.Result; // API returns { Result: [...] }
+    return data.Result;
   }
 
-  // Get one product by id
   async findProductById(id) {
-    if (!id) throw new Error("findProductById(id) requires an id.");
-    const response = await fetch(`${baseURL}product/${id}`);
+    const response = await fetch(`${baseURL}/product/${id}`, {
+      headers: getHeaders(),
+    });
     const data = await convertToJson(response);
-    return data.Result; // API returns { Result: {...} }
+    return data.Result;
   }
 }
