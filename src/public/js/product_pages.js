@@ -1,5 +1,4 @@
 // src/public/js/product_pages.js
-
 import { loadHeaderFooter, getParam } from "./utils.mjs";
 import ExternalServices from "./ExternalServices.mjs";
 import ProductDetails from "./ProductDetails.mjs";
@@ -7,11 +6,16 @@ import ProductDetails from "./ProductDetails.mjs";
 loadHeaderFooter();
 
 async function init() {
-  // get product id from URL: ?product=XXXX
   const productId = getParam("product");
+  const target = document.querySelector(".product-detail");
+
+  if (!target) {
+    console.error('Missing element: .product-detail on', location.pathname);
+    return;
+  }
 
   if (!productId) {
-    console.error("Missing product id in URL");
+    target.innerHTML = "<p>Missing product id in the URL. Example: ?product=880RR</p>";
     return;
   }
 
