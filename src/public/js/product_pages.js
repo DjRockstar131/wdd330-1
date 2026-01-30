@@ -1,7 +1,7 @@
 // src/public/js/product_pages.js
 
 import { loadHeaderFooter, getParam } from "./utils.mjs";
-import ExternalServices from "/js/ExternalServices.mjs";
+import ExternalServices from "./ExternalServices.mjs";
 import ProductDetails from "./ProductDetails.mjs";
 
 loadHeaderFooter();
