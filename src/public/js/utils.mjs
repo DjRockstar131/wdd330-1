@@ -72,6 +72,14 @@ export function renderWithTemplate(template, parent) {
   parentElement.innerHTML = template;
 }
 
+export function formDataToJSON(formData) {
+  const obj = {};
+  for (const [key, value] of formData.entries()) {
+    obj[key] = value;
+  }
+  return obj;
+}
+
 export async function loadHeaderFooter() {
   // If a page doesn't have one of these, don't crash—just skip.
   const headerEl = document.querySelector("#main-header");
