@@ -1,4 +1,4 @@
-import ProductData from "./ProductData.mjs";
+import ExternalServices from "./ExternalServices.mjs";
 import ProductList from "./ProductList.mjs";
 import { loadHeaderFooter, getParam } from "./utils.mjs";
 
@@ -9,7 +9,7 @@ const category = getParam("category") || "tents";
 document.querySelector("#page-title").textContent =
   `Top Products: ${category.replace("-", " ").replace(/\b\w/g, (c) => c.toUpperCase())}`;
 
-const dataSource = new ProductData();
+const dataSource = new ExternalServices();
 const listElement = document.querySelector(".product-list");
 
 const myList = new ProductList(category, dataSource, listElement);
