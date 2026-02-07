@@ -1,13 +1,24 @@
 // src/public/js/ExternalServices.mjs
-const rawBaseURL = import.meta.env.VITE_SERVER_URL || "";
-const baseURL = rawBaseURL.endsWith("/") ? rawBaseURL : `${rawBaseURL}/`;
 
-async function convertToJson(response) {
-  const data = await response.json().catch(() => ({}));
-  if (!response.ok) {
-    throw new Error(`Fetch failed: ${response.status} ${response.statusText} ${JSON.stringify(data)}`);
+const rawBaseURL = import.meta.env.VITE_SERVER_URL || "";
+// normalize: remove trailing slashes, then add exactly one
+const baseURL = rawBaseURL.replace(/\/+$/, "") + "/";
+
+async function convertToJson(res) {
+  // Read body FIRST (assignment requirement), but don't assume JSON always succeeds
+  let jsonResponse = {};
+  try {
+    jsonResponse = await res.json();
+  } catch {
+    // if it wasn't JSON, try text so we still have something useful
+    const text = await res.text().catch(() => "");
+    jsonResponse = text ? { message: text } : {};
   }
-  return data;
+
+  if (res.ok) return jsonResponse;
+
+  // Assignment-style custom error object:
+  throw { name: "servicesError", message: jsonResponse };
 }
 
 export default class ExternalServices {
@@ -24,15 +35,12 @@ export default class ExternalServices {
   }
 
   async checkout(payload) {
-    const url = `${baseURL}checkout`;
-
-    const options = {
+    const response = await fetch(`${baseURL}checkout`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
-    };
+    });
 
-    const response = await fetch(url, options);
     return await convertToJson(response);
   }
 }

@@ -1,4 +1,4 @@
-import { getLocalStorage } from "./utils.mjs";
+import { getLocalStorage, setLocalStorage, alertMessage } from "./utils.mjs";
 
 function formDataToJSON(form) {
   const fd = new FormData(form);
@@ -13,6 +13,8 @@ function packageItems(items) {
     const id = item.Id ?? item.id;
     const name = item.Name ?? item.name;
     const price = Number(item.FinalPrice ?? item.Price ?? item.price ?? 0);
+
+    if (!id) return;
 
     if (!map.has(id)) {
       map.set(id, { id, name, price, quantity: 1 });
@@ -48,7 +50,10 @@ export default class CheckoutProcess {
   }
 
   calculateSubtotal(items) {
-    return items.reduce((sum, item) => sum + Number(item.FinalPrice ?? item.Price ?? 0), 0);
+    return items.reduce(
+      (sum, item) => sum + Number(item.FinalPrice ?? item.Price ?? 0),
+      0
+    );
   }
 
   calculateShipping(itemsCount) {
@@ -61,34 +66,50 @@ export default class CheckoutProcess {
     el.textContent = `$${Number(value).toFixed(2)}`;
   }
 
+  setMessage(msg) {
+    if (this.messageEl) this.messageEl.textContent = msg;
+    // optional nicer UI (if you added alertMessage)
+    if (typeof alertMessage === "function") alertMessage(msg, true);
+  }
+
   // called on page load
   init() {
     const items = this.getCartItems();
     this.subtotal = this.calculateSubtotal(items);
     this.displayMoney(this.subtotalEl, this.subtotal);
 
-    // totals are calculated after zip is filled (per instructions)
-    if (this.form) {
-      const zipInput = this.form.querySelector('input[name="zip"]');
-      zipInput?.addEventListener("input", () => {
-        if (zipInput.value.trim().length >= 5) this.calculateAndDisplayTotals();
-      });
+    if (!this.form) return;
 
-      this.form.addEventListener("submit", (e) => {
-        e.preventDefault();
-        this.checkout(this.form);
-      });
-    }
+    // totals calculated after zip entered (per instructions)
+    const zipInput = this.form.querySelector('input[name="zip"]');
+    zipInput?.addEventListener("input", () => {
+      if (zipInput.value.trim().length >= 5) this.calculateAndDisplayTotals();
+    });
+
+    // IMPORTANT: submit event triggers built-in HTML validation automatically,
+    // but since we preventDefault, we should still checkValidity/reportValidity:
+    this.form.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const valid = this.form.checkValidity();
+      this.form.reportValidity();
+      if (!valid) return;
+
+      this.checkout(this.form);
+    });
   }
 
   calculateAndDisplayTotals() {
     const items = this.getCartItems();
     const count = items.length;
 
+    // Recompute subtotal each time in case cart changed
+    this.subtotal = this.calculateSubtotal(items);
     this.tax = this.subtotal * 0.06;
     this.shipping = this.calculateShipping(count);
     this.orderTotal = this.subtotal + this.tax + this.shipping;
 
+    this.displayMoney(this.subtotalEl, this.subtotal);
     this.displayMoney(this.taxEl, this.tax);
     this.displayMoney(this.shippingEl, this.shipping);
     this.displayMoney(this.totalEl, this.orderTotal);
@@ -97,7 +118,7 @@ export default class CheckoutProcess {
   async checkout(form) {
     const items = this.getCartItems();
     if (!items.length) {
-      this.messageEl.textContent = "Your cart is empty.";
+      this.setMessage("Your cart is empty.");
       return;
     }
 
@@ -115,9 +136,19 @@ export default class CheckoutProcess {
 
     try {
       const response = await this.services.checkout(order);
-      this.messageEl.textContent = `Order submitted! Response: ${JSON.stringify(response)}`;
+
+      // ✅ happy path
+      setLocalStorage(this.cartKey, []);
+      window.location.href = "/checkout/success.html";
+      return response;
     } catch (err) {
-      this.messageEl.textContent = `Checkout failed: ${err.message}`;
+      // ✅ handle custom servicesError { name, message: {message,status,...} }
+      if (err?.name === "servicesError") {
+        const serverMsg = err?.message?.message || "Checkout failed. Please check your info.";
+        this.setMessage(serverMsg);
+      } else {
+        this.setMessage(err?.message || "Checkout failed. Please try again.");
+      }
     }
   }
 }
