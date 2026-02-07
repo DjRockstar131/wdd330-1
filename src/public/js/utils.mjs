@@ -101,3 +101,31 @@ export async function loadHeaderFooter() {
 
   await Promise.all(tasks);
 }
+
+
+// ---------- UI Alert helper ----------
+export function alertMessage(message, scroll = true) {
+  const main = document.querySelector("main");
+  if (!main) return;
+
+  const alert = document.createElement("div");
+  alert.classList.add("alert");
+  alert.setAttribute("role", "alert");
+
+  alert.innerHTML = `
+    <p>${message}</p>
+    <button type="button" class="alert-close" aria-label="Close">×</button>
+  `;
+
+  // insert at top of main
+  main.prepend(alert);
+
+  // close button
+  alert.querySelector(".alert-close")?.addEventListener("click", () => {
+    alert.remove();
+  });
+
+  if (scroll) {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+}

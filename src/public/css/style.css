@@ -255,6 +255,30 @@ button {
     font-size: 1.2em;
   }
 
+.alert {
+  padding: 1rem;
+  margin: 1rem 0;
+  border: 2px solid #c0392b;
+  background: rgba(192, 57, 43, 0.15);
+  border-radius: 8px;
+  position: relative;
+}
+
+.alert p {
+  margin: 0;
+}
+
+.alert-close {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.5rem;
+  font-size: 1.25rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+
   .cart-card {
     font-size: inherit;
     grid-template-columns: 150px auto 15%;
